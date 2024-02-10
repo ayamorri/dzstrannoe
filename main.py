@@ -1,4 +1,5 @@
 import random
+from tkinter import *
 
 
 class Human:
@@ -23,9 +24,9 @@ class Human:
 
     def eat(self):
         if self.home.food <= 0:
-            self.shopping("Food")
+            self.shopping("food")
         elif self.home.water <= 0:
-            self.shopping("Water")
+            self.shopping("water")
         else:
             if self.satiety >= 100:
                 self.satiety = 100
@@ -48,10 +49,10 @@ class Human:
             else:
                 self.to_repair()
                 return
-            self.money = self.job.salary
-            self.gladness -= self.job.gladness_less
-            self.satiety -= 4
-            self.thirst -= 2
+        self.money += self.job.salary
+        self.gladness -= self.job.gladness_less
+        self.satiety -= 4
+        self.thirst -= 2
 
     def shopping(self, manage):
         if self.car.drive():
@@ -62,19 +63,19 @@ class Human:
             else:
                 self.to_repair()
                 return
-        if manage == "fuel":
+        if manage == 'fuel':
             print("I bought fuel!")
             self.money -= 100
             self.car.fuel += 100
         elif manage == "food":
-            print('I bought food!')
+            print("Bought food!")
             self.money -= 50
             self.home.food += 50
-        elif manage == "water":
-            print("I bought water!")
+        elif manage == 'water':
+            print("Bought water!")
             self.money -= 5
             self.home.water += 5
-        elif manage == "delicacies":
+        elif manage == 'delicacies':
             print("I'm happy!")
             self.gladness += 10
             self.money -= 15
@@ -90,13 +91,27 @@ class Human:
         pass
 
     def days_indexes(self, day):
-        d = F"Today the {day} of {self.name}'s life"
-        # "=======Today the 1 of Oleg's life ======="
+        d = f"Today the {day} of {self.name}'s life"
+        # "=======Today the 1 of Oleg's life======="
         print(f"{d:=^50}")
         human_i = f"{self.name}'s indexes"
         print(f"{human_i:=^50}")
+        print(f"{self.name}'s job is = {self.get_job()}")
+        print(f"{self.name}'s home is = {self.get_home()}")
+        print(f"{self.name}'s car is = {self.get_car()}")
+        print(f"{self.name}'s amount of money is = {self.money}")
+        print(f"{self.name}'s gladness is = {self.gladness}")
+        print(f"{self.name}'s satiety is = {self.satiety}")
+        print(f"{self.name}'s thirst is = {self.thirst}")
+        # HW - Потрібно вивести значення атрибутів рівня обєкту класу Human 4
+
         home_i = "Home indexes"
         print(f"{home_i:=^50}")
+        print(f"Home mess is {self.home.mess}")
+        print(f"Home food is {self.home.food}")
+        print(f"Home water is {self.home.water}")
+        # HW - Потрібно вивести значення атрибутів рівня обєкту класу House 3
+
         car_i = f"{self.car.brand} car indexes"
         print(f"{car_i:=^50}")
         print(f"Fuel = {self.car.fuel}")
@@ -104,17 +119,18 @@ class Human:
 
     def is_alive(self):
         if self.gladness <= 0:
-            print("Depression...")
+            print("Depression....")
             return False
         elif self.satiety < 0:
-            print("Dead...")
+            print("Dead....")
             return False
         elif self.money < -100:
             print("Bankrupt...")
             return False
 
     def live(self, day):
-        if self.is_alive() == False:
+        if self.is_alive() == False:  # not False => True
+            # if not self.is_alive(): # not False => True
             return False
         if self.home is None:
             print("Settled in the home")
@@ -130,6 +146,7 @@ class Human:
         if self.satiety < 10 or self.thirst < 10:
             print("Go eat or drink!")
             self.eat()
+
         elif self.gladness < 10:
             if self.home.mess > 15:
                 print("Go clean home")
@@ -141,16 +158,16 @@ class Human:
             print("Start working!")
             self.work()
         elif self.car.strength < 15:
-            print('I need to repair my car')
+            print("I need to repair my car!")
             self.to_repair()
         elif dice == 1:
-            print("Time to chill!")
+            print("Time to chill")
             self.chill()
         elif dice == 2:
             print("Start working!")
             self.work()
         elif dice == 3:
-            print("Time to clean!")
+            print('Time clean')
             self.clean_home()
         elif dice == 4:
             print("Time for treats!")
@@ -176,7 +193,7 @@ class Auto:
 
 class House:
     def __init__(self):
-        self.mess = 0
+        self.mess = 10
         self.food = 0
         self.water = 0
 
@@ -188,16 +205,16 @@ class Job:
         self.gladness_less = job_list[self.job]["gladness_less"]
 
 
-job_list = {"Python Developer": {"salary": 40, "gladness_less": 10},
-            "C++ Developer": {"salary": 60, "gladness_less": 4},
-            "Java Developer": {"salary": 50, "gladness_less": 8}, }
+job_list = {"Python developer": {"salary": 40, "gladness_less": 10},
+            "C++ developer": {"salary": 60, "gladness_less": 4},
+            "Java developer": {"salary": 50, "gladness_less": 8}, }
 
 brands_of_car = {"BMW": {"fuel": 100, "strength": 120, "consumption": 14},
                  "Lada": {"fuel": 80, "strength": 40, "consumption": 12},
                  "Ford": {"fuel": 60, "strength": 80, "consumption": 8},
                  "Ferrari": {"fuel": 50, "strength": 90, "consumption": 16}}
 
-h = Human('Oleg')
-for day in range (1,8):
+h = Human("Oleg")
+for day in range(1, 8):
     if h.live(day) == False:
         break
